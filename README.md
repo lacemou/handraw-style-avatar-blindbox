@@ -71,4 +71,4 @@ python -m http.server 8000
 
 ## 数据、图片与许可证
 
-代码许可和图片素材说明分开管理，详见 [LICENSE](LICENSE) 与 [THIRD\_PARTY\_NOTICES.md](THIRD_PARTY_NOTICES.md)。风格参考图来自上游手绘风格 SKILL；个人头像图是风格迁移尝试，仅作示例和参考，允许下载试用。两类图片均不适用本仓库自有代码的 MIT 许可。
+根目录 [LICENSE](LICENSE) 中的 MIT 许可仅适用于本项目自有前端源文件 `index.html`、`app.js` 和 `style.css`，不覆盖仓库中的其他文件。图片素材的来源和使用边界详见 [THIRD\_PARTY\_NOTICES.md](THIRD_PARTY_NOTICES.md)：风格参考图来自上游手绘风格 SKILL；个人头像图是风格迁移尝试，仅作示例和参考，允许下载试用。两类图片均不适用本项目代码的 MIT 许可。
