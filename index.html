@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>261画风头像盲盒机</title>
+  <meta name="description" content="浏览、随机抽取并对比 261 种手绘风格头像，支持风格检索、提示词复制与卡片导出。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 顶部导航与品牌区 -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand-mark">
+          <span class="brand-dot"></span>
+          <span class="brand-name">AI不会累 · 视觉实验所</span>
+        </div>
+        <div class="status-indicator">
+          <span class="status-badge" id="asset-status-badge">261 款全量头像已就绪</span>
+        </div>
+      </div>
+      <h1 class="main-title">今日职场人设 · 261画风盲盒机</h1>
+    <!-- 主展示区：抽签机与人设卡片 -->
+    <main class="main-stage">
+      <div class="stage-card">
+        <!-- 视觉展示模块 -->
+        <div class="visual-panel">
+          <div class="view-switch-bar">
+            <button class="switch-btn active" data-view="avatar" id="btn-view-avatar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              个人IP头像
+            </button>
+            <button class="switch-btn" data-view="preview" id="btn-view-preview">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              原画风格参考
+            </button>
+            <button class="switch-btn" data-view="split" id="btn-view-split">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+              左右拉帘对比
+            </button>
+          </div>
+
+          <div class="display-canvas-wrapper" id="display-wrapper">
+            <!-- 单图/卡牌切牌视口 -->
+            <div class="image-viewport" id="image-viewport">
+              <div class="deck-container" id="deck-container">
+                <div class="deck-stack deck-stack-2"></div>
+                <div class="deck-stack deck-stack-1"></div>
+                <div class="deck-card" id="deck-card">
+                  <img id="primary-img" src="" alt="当前风格头像" class="stage-img">
+                  <div class="card-edge-highlight"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 拉帘对比视口 -->
+            <div class="split-viewport" id="split-viewport" style="display: none;">
+              <img id="split-bg-img" src="" alt="原画风格" class="split-img split-bg">
+              <div class="split-foreground-wrapper" id="split-fg-wrapper">
+                <img id="split-fg-img" src="" alt="个人IP头像" class="split-img split-fg">
+              </div>
+              <div class="split-divider" id="split-divider">
+                <div class="split-handle">
+                  <span>◀▶</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 抽签转动时的动态编号水印 -->
+            <div class="rolling-counter" id="rolling-counter">№ 001</div>
+          </div>
+        </div>
+
+        <!-- 详细信息与人设卡 -->
+        <div class="info-panel">
+          <div class="style-meta-header">
+            <div class="style-num-badge" id="style-id-badge">№ 001</div>
+            <span class="style-group-tag" id="style-group-badge">国际社论漫画</span>
+          </div>
+
+          <h2 class="style-name" id="style-title">Playful Deadpan Doodle</h2>
+          <div class="style-author" id="style-author">风格来源：Gemma Correll</div>
+
+          <!-- 职场今日人设签模块 -->
+          <div class="persona-card" id="persona-container">
+            <div class="persona-header">
+              <span class="persona-seal" id="persona-tag">【CPU过载签】</span>
+              <span class="persona-luck" id="persona-luck" title="今日运势">★★★★★</span>
+            </div>
+            <p class="persona-quote" id="persona-quote">“需求改到五官错位，今天谁也别跟我谈逻辑。”</p>
+            <div class="almanac-row">
+              <div class="almanac-item yi">
+                <span class="almanac-lbl">宜</span>
+                <span class="almanac-val" id="persona-yi">已读不回、深呼吸</span>
+              </div>
+              <div class="almanac-item ji">
+                <span class="almanac-lbl">忌</span>
+                <span class="almanac-val" id="persona-ji">承诺工期、接连环call</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 风格笔触签名特征 -->
+          <div class="traits-box">
+            <div class="traits-title">画风机制提取</div>
+            <p class="traits-content" id="style-traits">松散黑线、怪萌人物、少量点色、白底、日常吐槽与尴尬幽默...</p>
+          </div>
+
+          <!-- 核心控制按钮组 -->
+          <div class="action-btn-row">
+            <button class="btn btn-primary" id="btn-roll">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="8" cy="8" r="1.5"/><circle cx="16" cy="16" r="1.5"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="8" r="1.5"/><circle cx="12" cy="12" r="1.5"/></svg>
+              <span id="roll-text">摇出今日人设</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-copy-prompt" title="复制8步法结构化提示词配方">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>复制配方</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-share-poster" title="生成并下载拍立得人设卡片">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              <span>保存卡片</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 下方：261 画风全景漫游画廊 -->
+    <section class="gallery-section">
+      <div class="gallery-header">
+        <div class="gallery-title-wrap">
+          <h3 class="gallery-title">261 风格漫游画廊</h3>
+          <span class="gallery-count" id="gallery-count-text">共 261 种手绘风格</span>
+        </div>
+
+        <div class="gallery-toolbar">
+          <div class="filter-pills" id="filter-pills">
+            <button class="pill active" data-filter="all">全部 (261)</button>
+            <button class="pill" data-filter="A">社论幽默</button>
+            <button class="pill" data-filter="B">绘本插画</button>
+            <button class="pill" data-filter="C">平面构成</button>
+            <button class="pill" data-filter="D">动漫经典</button>
+            <button class="pill" data-filter="E">东方水墨</button>
+          </div>
+          <div class="search-wrap">
+            <input type="text" id="gallery-search" placeholder="搜索编号 / 风格 / 签文..." class="search-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- 瀑布流缩略网格 -->
+      <div class="styles-grid" id="styles-grid">
+        <!-- 由 JavaScript 动态渲染 -->
+      </div>
+    </section>
+
+    <!-- 底部出版署名 -->
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <p>AI不会累 · YJ陪你追</p>
+        <p class="footer-note">开源风格库：yang0/handraw-style · 实验项目：036 个人IP头像跨风格逆向工程</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 分享海报生成弹窗 Modal -->
+  <div class="modal-backdrop" id="poster-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>今日职场人设卡片</h4>
+        <button class="close-btn" id="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="canvas-preview-wrap">
+          <canvas id="poster-canvas" width="600" height="840"></canvas>
+        </div>
+        <p class="poster-tip">提示：手机端可长按上方图片保存，电脑端请点击下方下载</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-close-modal-2">关闭</button>
+        <button class="btn btn-primary" id="btn-download-poster">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载人设海报
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全局 Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
